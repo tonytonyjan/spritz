@@ -1,0 +1,53 @@
+#!/usr/bin/env ruby
+
+if ARGV.index('-h')
+  puts "Usage: #{__FILE__} [-n word_per_minute] file..."
+  exit(0)
+end
+
+if idx = ARGV.index('-n')
+  WORD_PER_MINUTE = ARGV[idx+1].to_i
+  2.times{ ARGV.delete_at(idx) }
+else
+  WORD_PER_MINUTE = 250
+end
+
+SLEEP_SECONDS = 60.0 / WORD_PER_MINUTE
+COLUMNS = 50
+
+class String
+  def bold;  "\033[1m#{self}\033[22m" end
+  def green; "\033[32m#{self}\033[0m" end
+  def gray;  "\033[37m#{self}\033[0m" end
+  def optimal_index
+    idx = (0.35 * self.length).ceil
+    idx = 5 if idx > 5
+    idx -= 1
+  end
+
+  def print_word
+    idx = optimal_index
+    left_padding = COLUMNS/2 - idx
+    right_padding = COLUMNS/2 - (length - idx)
+
+    ret = "\r#{' '*left_padding}"
+    ret << "#{self[0, idx]}"
+    ret << "#{self[idx].green.bold}"
+    ret << "#{self[idx+1, length].gray}"
+    ret << "#{' '*right_padding}"
+    print ret
+  end
+end
+
+tail = ''
+while read = ARGF.read(1024)
+  tail << read
+  tail.match /\S+\s*\z/
+  tail, words = $&, $`.scan(/\S+/)
+  while word = words.shift
+    word.print_word
+    sleep SLEEP_SECONDS
+  end
+end
+tail.print_word
+puts
