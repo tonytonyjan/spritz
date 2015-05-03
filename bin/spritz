@@ -47,6 +47,10 @@ while read = ARGF.read(1024)
   while word = words.shift
     word.print_word
     sleep SLEEP_SECONDS
+    if word.end_with?(?!, ??, ?.)
+      print "\r#{' '*COLUMNS}"
+      sleep SLEEP_SECONDS
+    end
   end
 end
 tail.print_word
