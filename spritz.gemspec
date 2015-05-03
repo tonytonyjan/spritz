@@ -1,6 +1,6 @@
 Gem::Specification.new do |s|
   s.name        = 'spritz_reader'
-  s.version     = '1.0.1'
+  s.version     = '1.0.2'
   s.licenses    = ['MIT']
   s.summary     = 'Command line tool for spritz reading.'
   s.description = %q(
