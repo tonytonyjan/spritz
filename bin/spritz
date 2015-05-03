@@ -39,6 +39,8 @@ class String
   end
 end
 
+Signal.trap('INT'){ puts; exit(0) }
+
 tail = ''
 while read = ARGF.read(1024)
   tail << read
